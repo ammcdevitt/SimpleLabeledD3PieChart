@@ -1,4 +1,4 @@
 # SimpleLabeledD3PieChart
 
-![output](https://cloud.githubusercontent.com/assets/10386036/19627543/29083dc6-9917-11e6-9582-58fedfc0874b.png) <br>
+![d3piechart](https://user-images.githubusercontent.com/10386036/77810596-caccac00-705a-11ea-8eb7-6861f5e6665c.png)
 <em> (preview) </em>
