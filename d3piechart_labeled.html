@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<script src="https://d3js.org/d3.v5.min.js"></script>
+		<style>			
+		</style>
+	</head>
+	<!-- http://www.cagrimmett.com/til/2016/08/19/d3-pie-chart.html -->
+	<!-- location of pie chart --> 
+	<body>
+		<div id="pie"></div>
+	</body>
+
+<script>
+
+//var data = {NOAA: 54, NIST: 40.5, NTIA: 5.5}
+var data = [{"category":"Category 1:","percentage":54},{"category":"Category 2:","percentage":40.5},{"category":"Category 3:","percentage":5.5}];
+
+// dimensions and margins of the graph
+var width = 450
+height = 450
+margin = 40
+// radius is half the width or half the height. leaves room for margin
+var radius = Math.min(width, height) / 2 - margin;
+	
+// pie slice colors
+var color = d3.scaleOrdinal()
+  .range(["#0a3542", "#71535c", "#7e8959"])
+
+// position of each group on the pie
+var pie = d3.pie()
+	.value(function(d) { return d.percentage; })(data);
+	
+// arc for chart and for labels
+var arc = d3.arc()
+	.innerRadius(0)
+	.outerRadius(radius);
+var labelArc = d3.arc()
+	.outerRadius(radius - 80)
+	.innerRadius(radius - 100);
+
+// start with svg. div that holds chart: append svg object to 'pie' div. move center point 1/2 the width and 1/2 the height, so that it's not in the upper right corner
+var svg = d3.select("#pie")
+	.append("svg")
+    .attr("width", width)
+    .attr("height", height)
+		.append("g")
+    	.attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+// join data created by pie() with arcs to hold paths
+var g = svg.selectAll("arc")
+	.data(pie)
+	.enter().append("g")
+	.attr("class", "arc");
+	
+// append paths created from .arc() functions with variables. using color variable to get colors for various arcs
+g.append("path")
+	.attr("d", arc)
+	.style("fill", function(d) { return color(d.data.category);});
+
+// append text tags in each arc, set position iwth a transform defined by labelArc, and access correct data to label
+g.append("text")
+	.attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
+	.text(function(d) { return d.data.category + " " + d.data.percentage + "%";})
+	.style("fill", "#dad7c6")
+	.attr("font-family", "sans-serif")
+	.attr("font-weight", "600");
+
+var aspect = width / height,
+    chart = d3.select('#pie');
+d3.select(window)
+	.on("resize", function() {
+	var targetWidth = chart.node().getBoundingClientRect().width;
+	chart.attr("width", targetWidth);
+	chart.attr("height", targetWidth / aspect);
+  });
+
+// make graph responsive by using viewBox and preserveAspectRatio
+/*	
+const svg = d3
+  .select("#pie")
+  .append("svg")
+  .attr("viewBox", "0 0 300 600")
+*/
+</script>
+</html>
